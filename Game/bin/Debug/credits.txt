@@ -1,0 +1,6 @@
+Special thanks to mέnfiέ for finding NullException like error. Problem probalary solved in next versions.
+Stackoverflow:
+https://stackoverflow.com/questions/28859074/read-all-lines-in-text-file-with-separator
+also another question answer but i can't remember when i found i will add
+https://www.dotnetperls.com/convert-string-array-string
+
