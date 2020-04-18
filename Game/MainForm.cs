@@ -105,7 +105,7 @@ namespace Game
 		spritelayer_1 =  pictureBox1.CreateGraphics();	//Flickery Layer
 		
 		}
-		string[] columnValues;
+		string[] columnValues;		// BU DEĞER NULL
 	
     //string[] confValues;
 		void MainFormLoad(object sender, EventArgs e)
@@ -131,18 +131,18 @@ SetStyle(ControlStyles.DoubleBuffer, true);
    string rootFolder = Path.GetDirectoryName(Application.ExecutablePath);;    
    
   //Default file. MAKE SURE TO CHANGE THIS LOCATION AND FILE PATH TO YOUR FILE   
-  string textFile = String.Format("{0}\\game.is",rootFolder);
+  string textFile = String.Format("{0}\\game.is",rootFolder);			// BU İSİMDE BİR DOSYA YOK
 
-    StreamReader myReader = new StreamReader(textFile);
+    StreamReader myReader = new StreamReader(textFile);		// BURADA OLMAYAN DOSYAYI OKUMAK İÇİN BİR READER OLUŞTURUYOSUN
 String line = "E";
-int miktar = columnValues.GetLength(1);;
+int miktar = columnValues.GetLength(1);;	// FAKAT BU AMINA KODUĞUMUN YERİNDE KULLANMAYA ÇALIŞIYORSUN
 for (int i =0; i <miktar; i++)
 {
  
-       line = myReader.ReadLine();
+       line = myReader.ReadLine();	// BU SİKTİĞİMİN YERİNDE DE OLMAYAN DOSYAYI OKUYUP "line" A KAYDETMEYE ÇALIŞIYOSUN (line bu yüzden NULL)
     char[] delimiters = new char[] {' ', '\t'};
   
-    columnValues = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+    columnValues = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries); // NULL OLAN "line" I OKUMAYA ÇALIŞTIĞIN İÇİN HATA ALIYORSUN
     
     MessageBox.Show(line);
                    
