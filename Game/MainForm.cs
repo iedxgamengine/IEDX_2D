@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Created by SharpDevelop.
  * User: casper
  * Date: 11.04.2020
@@ -17,6 +17,22 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
+// Copyright (C) 2020  NeonWards
+// 
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
 namespace Game
 {
 	/// <summary>
@@ -27,9 +43,12 @@ namespace Game
 	  
 	public partial  class MainForm :Form
 	{
-		int tra_x = 260;
-		int tra_y = 0;
+		 int tra_x = 290;//260
+		 int tra_y = 0;
+		 int health = 100; 
 		 public int gravitySpeed = 1;
+		 
+		 
  public int Gravity = 1;
  bool falling = false;
  bool left;
@@ -37,6 +56,9 @@ namespace Game
  bool up;
  bool down;
  bool lync;
+ bool player_seen = false;
+   int drawlimit;
+   string antialias;
 		public MainForm()
 		{
 			//
@@ -80,7 +102,7 @@ namespace Game
 		{
 		pictureBox1.Visible = true;
 
-		spritelayer_1 =  pictureBox1.CreateGraphics();	
+		spritelayer_1 =  pictureBox1.CreateGraphics();	//Flickery Layer
 		
 		}
 		string[] columnValues;
@@ -109,18 +131,21 @@ SetStyle(ControlStyles.DoubleBuffer, true);
    string rootFolder = Path.GetDirectoryName(Application.ExecutablePath);;    
    
   //Default file. MAKE SURE TO CHANGE THIS LOCATION AND FILE PATH TO YOUR FILE   
-  string textFile = String.Format("{0}\\map.imap",rootFolder);
+  string textFile = String.Format("{0}\\game.is",rootFolder);
 
     StreamReader myReader = new StreamReader(textFile);
 String line = "E";
-for (int i =0; i <15; i++)
+int miktar = columnValues.GetLength(1);;
+for (int i =0; i <miktar; i++)
 {
-    line = myReader.ReadLine();
-    
+ 
+       line = myReader.ReadLine();
     char[] delimiters = new char[] {' ', '\t'};
   
     columnValues = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
     
+    MessageBox.Show(line);
+                   
 }  
 
   string confFile = String.Format("{0}\\Game.conf",rootFolder);
@@ -132,33 +157,107 @@ for (int i =0; i <15; i++)
    }  
 		
 	
-	   
+		void settings(PaintEventArgs e)
+		{
+				
+			if(antialias.Contains("anti-alias")){
+				e.Graphics.SmoothingMode = 
+        System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			}
+	if(antialias.Contains("hspeed")){
+				e.Graphics.SmoothingMode = 
+        System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+			}
+	if(antialias.Contains("hquality")){
+				e.Graphics.SmoothingMode = 
+        System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			}
+	if(antialias.Contains("none")){
+				e.Graphics.SmoothingMode = 
+        System.Drawing.Drawing2D.SmoothingMode.None;
+			}
+	if(antialias.Contains("default")){
+				e.Graphics.SmoothingMode = 
+        System.Drawing.Drawing2D.SmoothingMode.Default;
+			}
+		}
+		
+		
+	   	void ai(PaintEventArgs e)
+		{
+int x = 0;
+int y = 0;	   		
+int x_size = 50;
+
+int y_size = 50;
+
+	  		for (int i = 0; i <  drawlimit ; i++)
+                {
+	   						
+	   				
+	  
+	   			if (columnValues[i].Contains("evilnpc")){
+	   					 x = Int32.Parse(columnValues[i+1]);
+	   y = Int32.Parse(columnValues[i+2]);
+	  
+	   					
+	   					bool player_killed = false;
+	   					bool idle = true;
+	   					bool died = false;
+	   					bool gun = true;
+	   					string weapon = "Pistol";
+	   					int ammo = 10;
+	   					
+	   					e.Graphics.DrawRectangle(new Pen(Brushes.Chocolate),x,y,x_size,y_size);
+
+
+
+}
+	//Collision Detection Right:
+		if( tra_x < x + x_size &&
+     tra_x + 20 > x &&
+     tra_y < y + y_size &&
+     tra_y + 20 > y)
+{
+
+player_seen = true;
+}else{
+		player_seen = false;
+}
+		
+	   	if(player_seen == true){
+	   						int near_x = tra_x-10;
+	   						e.Graphics.DrawEllipse(new Pen(Brushes.DeepSkyBlue),near_x,y,40,40);
+	   					}				
+				
+				}
+	   						
+	   					}
+	   		
+	   	
+			
+	   	
+	   		
 		void PictureBox1Paint(object sender, PaintEventArgs e)
 		{
-			
-
+		//candlescream specials
     Rectangle rectangle2 = new Rectangle(tra_x, tra_y, 20, 20);
 
 back_nplayer =  this.CreateGraphics();	
-    e.Graphics.FillRectangle(Brushes.Red, rectangle2);
-        this.DoubleBuffered = true;
-for (int i = 0; i <  10 ; i+=3)
-{
-        	   if (columnValues[i].Contains("map.sprite")){
-	// Rectangle mouseNewRect;
-	 /*int x = Int32.Parse(columnValues[1]);
-	  int Y = Int32.Parse(columnValues[2]);*/
 
-	
-// SolidBrush blueBrush  = new SolidBrush(Color.Red);
-string rootFolder = Path.GetDirectoryName(Application.ExecutablePath);;    
-//string image = String.Format("{0}{1}",rootFolder,string.Join("", columnValues[i+1]));
-string image =  String.Format("{0}\\assets\\sprites\\sprite{1}.png",rootFolder,string.Join("", columnValues[i+1]));
-Bitmap myBitmap = new Bitmap(image);
-	e.Graphics.DrawImage(myBitmap, 10, 10);
-	}	
-  }	      
-			
+
+    e.Graphics.FillRectangle(Brushes.Red, rectangle2);
+    
+    Brush textBrush = new SolidBrush(Color.Red);
+ Font font = new Font("Pixelita", 12.0f);
+
+ e.Graphics.DrawString(String.Format("Health: {0}",health),font,textBrush,200,0);
+                	
+        this.DoubleBuffered = true;
+        settings(e);
+           ai(e);
+        ParserObject_Layer1(e);
+     
 		}
 		
 		
@@ -168,214 +267,81 @@ Bitmap myBitmap = new Bitmap(image);
 					
 		}
 	
-		void ParserObject()
+		void ParserObject_Layer1(PaintEventArgs e)
 		{
-			 	
-for (int i = 0; i <  10 ; i+=3)
+			for (int i = 0; i <  drawlimit ; i++)
 {
-	
-			if (columnValues[i].Contains("map.redRect")){
-			 Rectangle mouseNewRect;
-	 /*int x = Int32.Parse(columnValues[1]);
-	  int Y = Int32.Parse(columnValues[2]);*/
-
-	 mouseNewRect = new Rectangle(new Point(Int32.Parse(columnValues[i+1]), Int32.Parse(columnValues[i+2])), new Size(100, 100));
-
-	spritelayer_1.DrawRectangle(new Pen(Brushes.Red), mouseNewRect);
-	}
-		
-	
-   if (columnValues[i].Contains("map.newRect")){
-	 Rectangle mouseNewRect;
-	 int x = Int32.Parse(columnValues[i+1]);
-	  int y = Int32.Parse(columnValues[i+2]);
-	  
-
-	 mouseNewRect = new Rectangle(new Point(Int32.Parse(columnValues[i+1]), Int32.Parse(columnValues[i+2])), new Size(100, 100));
-
-	 //FIXME: Fix gravity+collision detection
-
-
-   Rectangle mooseNewRect;
-	 /* mooseNewRect = new Rectangle(x,y,5,10);
-spritelayer_1.DrawRectangle(new Pen(Brushes.Chocolate), mooseNewRect);*/
-	
-	 //altay left the game 20:17 13.04.2020 seni özleyeceğim kanka: altay i will remember you forever thanks for my best buddy but you are leaving now :=( (he quitted) i can't reach him . 
-	spritelayer_1.DrawRectangle(new Pen(Brushes.Chocolate), mouseNewRect);
-	
-	if( tra_x < x + 100 &&
-     tra_x + 20 > x &&
-     tra_y < y + 100 &&
-     tra_y + 20 > y)
-{
-		if(falling==true){
-			falling =true;
-		tra_y-=20;
-		
-		}
-		if(down =true ){
-		//falling =true;
-		tra_y-=30;
-		down=false;
-        }
-		if(left==true){
-				if(falling ==false){
-				tra_x+=10;
-			}else{
-				tra_x-=10;
-			}
-			left=false;
-		}
-		if(right==true){
-			if(falling ==false){
-				tra_x-=10;
-			}else{
-				tra_x+=10;
-			}
-			
-			right=false;
-		}
-				if(up=true){
-			tra_y+=30;
-			up=false;
-		}
-}
-
-}
-	
-  
-		   if (columnValues[i].Contains("map.fillRect")){
-	 Rectangle mouseNewRect;
-	 /*int x = Int32.Parse(columnValues[1]);
-	  int Y = Int32.Parse(columnValues[2]);*/
-
-	
- SolidBrush blueBrush  = new SolidBrush(Color.Red);
-
-	
-	}
-	 /*  if (columnValues[i].Contains("map.sprite")){
+			/*	if (columnValues[i].Contains("keyboard")){
+					
+				}*/
+        	   if (columnValues[i].Contains("map.sprite")){
 	// Rectangle mouseNewRect;
-	 /*int x = Int32.Parse(columnValues[1]);
-	  int Y = Int32.Parse(columnValues[2]);*/
-/*
-	
+	 int x = Int32.Parse(columnValues[i+2]);
+	  int y = Int32.Parse(columnValues[i+3]);
+int x_size = Int32.Parse(columnValues[i+4]);
+
+int y_size = Int32.Parse(columnValues[i+5]);
+
+	Rectangle inf = new Rectangle(x, y,x_size,y_size);
 // SolidBrush blueBrush  = new SolidBrush(Color.Red);
 string rootFolder = Path.GetDirectoryName(Application.ExecutablePath);;    
 //string image = String.Format("{0}{1}",rootFolder,string.Join("", columnValues[i+1]));
 string image =  String.Format("{0}\\assets\\sprites\\sprite{1}.png",rootFolder,string.Join("", columnValues[i+1]));
 Bitmap myBitmap = new Bitmap(image);
-	spritelayer_1.DrawImage(myBitmap, 10, 10);
-	}	*/
-		
-		   if (columnValues[i].Contains("map.newElips")){
-	// Rectangle mouseNewRecta;
-	 /*int x = Int32.Parse(columnValues[1]);
-	  int Y = Int32.Parse(columnValues[2]);*/
-	 Rectangle myRectangle = new Rectangle(new Point(Int32.Parse(columnValues[i+1]),Int32.Parse(columnValues[i+2])),new Size(80, 40));
-	//spritelayer_1.DrawEllipse(new Point(Int32.Parse(columnValues[i-1]), Int32.Parse(columnValues[i-2])), new Size(100, 100));
-spritelayer_1.DrawEllipse(new Pen(Brushes.Chocolate), myRectangle);
-// mouseNewRecta = new Elipse(new Point(Int32.Parse(columnValues[i-1]), Int32.Parse(columnValues[i-2])), new Size(100, 100));
-	//spritelayer_1.DrawEllipse(new Pen(Brushes.Chocolate), mouseNewRecta);
-	}
-		   if (columnValues[i+4].Contains("rect.blue")){
-	 Rectangle mouseNewRecte;
-	 
-	 /*int x = Int32.Parse(columnValues[1]);
-	  int Y = Int32.Parse(columnValues[2]);*/
-
-	 mouseNewRecte = new Rectangle(new Point(Int32.Parse(columnValues[i-1]), Int32.Parse(columnValues[i-2])), new Size(100, 100));
-
-	spritelayer_1.DrawRectangle(new Pen(Brushes.Chocolate), mouseNewRecte);
+	e.Graphics.DrawImage(myBitmap,inf );
+	
+	//Collision Detection Top:
+		if( tra_x < x + x_size &&
+     tra_x + 20 > x &&
+     tra_y < y + y_size/2 &&
+     tra_y + 20 > y)
+{
+falling=false;//int tra_x = 260;
+tra_y-=1;
 }
+		//Collision Detection Bottom:
+		if( tra_x < x + x_size &&
+     tra_x + 20 > x &&
+     tra_y < y+y/2 + y_size/2 &&
+     tra_y + 20 > y+y/2)
+{
 
-    // Create rectangle.
- /*   Rectangle rect; 
- rect = new Rectangle(new Point(Int32.Parse(columnValues[i+1]), Int32.Parse(columnValues[i+2])), new Size(100, 100));
-    // Fill rectangle to screen.
-    	
- SolidBrush blueBrushe  = new SolidBrush(Color.Red);
-    spritelayer_1.FillRectangle(blueBrushe, rect);*/
-
-
+tra_y+=1;
 }
-					
-		}	
+				//Collision Detection Left:
+		if( tra_x < x + x_size-20 &&
+     tra_x + 20 > x &&
+     tra_y < y+3 + y_size-10 &&
+     tra_y + 20 > y+3)
+{
+
+tra_x-=1;
+}
+	//Collision Detection Right:
+		if( tra_x < x+20 + x_size-20 &&
+     tra_x + 20 > x+20 &&
+     tra_y < y+3 + y_size-10 &&
+     tra_y + 20 > y+3)
+{
+
+tra_x+=1;
+}
+	/*	e.Graphics.DrawRectangle(new Pen(Brushes.Chocolate),x,y+y/2,x_size,y_size);
+		e.Graphics.DrawRectangle(new Pen(Brushes.Chocolate),x,y+3,x_size-20,y_size-10);
+		e.Graphics.DrawRectangle(new Pen(Brushes.Chocolate),x+20,y+3,x_size-20,y_size-10);*/
+	}	
+  }			
+		}
 		
 void Timer1Tick(object sender, EventArgs e)
 		{
 			 
 	this.Refresh();
-	ParserObject();
-	
-		}
-		
-		void Timer2Tick(object sender, EventArgs e)
-		{
-this.Refresh();			
-if(timer2.Interval == 1){
-timer2.Interval = 500;
-}
-		}
-	
 
-		void MainFormKeyPress(object sender, KeyPressEventArgs e)
-		{
-		
-							 if (e.KeyChar == 87)
-            {
-				 	tra_y--;
-				 	timer2.Interval = 1;
-				 	up = true;
-				 	 //MessageBox.Show(title);
-				 	
-			    
-            }
-							 if (e.KeyChar == (char)Keys.S)
-            {
-				 	tra_y++;
-				 	timer2.Interval = 1;
-				 	down = true;
-				 	
-			   
-            }
-							 if (e.KeyChar == (char)Keys.A)
-            {
-				 	tra_x--;
-				 	timer2.Interval = 1;
-				 	left = true;
-				 	
-			
-            }
-							 if (e.KeyChar == (char)Keys.D)
-            {
-				 	tra_x++;
-				 	timer2.Interval = 1;
-				 	right = true;
-				 	
-            }
-					 if (e.KeyChar == (char)Keys.Space)
-            {
-					 	jumper.Enabled = true;
 	
-            }							 
-							 							 if (e.KeyChar == (char)Keys.G)
-            {
-				 	tra_y+=30;
-				 	timer2.Interval = 1;
-				 	right = true;
-				 	
-            }
 		}
 		
-		void Timer3Tick(object sender, EventArgs e)
-		{
-    /*  if (Control.IsKeyLocked(Keys.CapsLock) {
-           	MessageBox.Show("Warning: CAPSLOCK CAN BREAK MOVEMENT SYSTEM OF THIS GAME .IEDX Game engine input system currently doesn't capable of while capslock on and movement so please turn off/on i don't know what status of capslock but press again. YOU MAY ASK WHY BEACUSE I DON'T KNOW WHERES PROBLEM THIS ENGINE  IS OPEN SOURCE SO IF YOU WANT FIX IT LET ME KNOW I WILL ADD YOUR CODE ALSO I CREDIT YOU ");
-           	
-        }*/
-						
-		}
+	
 		
 		void Timer4Tick(object sender, EventArgs e)
 		{
@@ -391,7 +357,10 @@ List<string[]> confValues = File.ReadLines(String.Format("{0}\\game.conf",rootFo
                    
                    title.Replace("Title"," ");
  title.Replace("_"," ");
-
+string avariable = String.Concat(confValues[10]);
+ antialias = String.Concat(confValues[12]);
+ 
+drawlimit = Int32.Parse(avariable);
 this.Text = title;
 timer4.Enabled = false;
 
@@ -405,8 +374,10 @@ timer4.Enabled = false;
 	  
 			if(falling == true){
 			  gravitySpeed += Gravity;
-    tra_x += 1;
-    tra_y += 1 + gravitySpeed;}
+    //tra_x += 1;
+    tra_y += 1 + gravitySpeed;
+		//tra_y++;
+		}
 
 	
 			
@@ -456,6 +427,59 @@ jumper.Enabled = false;
 falling=false;			
 sta.Enabled = false;
 		}
+		
+	
+		
+		void MainFormResize(object sender, EventArgs e)
+		{
+			pictureBox1.Width = this.Width;		
+pictureBox1.Height = this.Height;
+		}
+		
+		void MainFormKeyDown(object sender, KeyEventArgs e)
+		{
+			            if (e.KeyCode == Keys.W)
+            {
+                tra_y-=1;
+            }
+			            if (e.KeyCode == Keys.S)
+            {
+                tra_y+=1;
+            }
+			            if (e.KeyCode == Keys.D)
+            {
+                tra_x+=1;
+            }
+			            if (e.KeyCode == Keys.A)
+            {
+                tra_x-=1;
+            }
+			 if (e.KeyCode == Keys.Space)
+            {
+					 	jumper.Enabled = true;
+	
+            }	
+			 
+			for (int i = 0; i <  drawlimit ; i++)
+{
+				if (columnValues[i].Contains("key.f")){
+					if (e.KeyCode == Keys.F)
+            {
+					if (columnValues[i+1].Contains("tra_x++")){
+							tra_x++;
+						}
+					if (columnValues[i+1].Contains("tra_x--")){
+							tra_x--;
+						}	
+					if (columnValues[i+1].Contains("itempick")){
+							//itempick();
+						}			
+            }				
+				}
+		}
+		}
+		
+	// % işleci bölme işleminin kalanını bulur
    }}
 			
 			
