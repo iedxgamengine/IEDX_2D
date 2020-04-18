@@ -1,1 +1,1 @@
-map.sprite 0 map.newPushRect 63 342 map.newPushRect 168 248 map.newPushRect 278 143 map.newPushRect 256 215 map.newPushRect 396 121 
+map.sprite 1 73 84 90 40 map.sprite 1 150 84 90 40 evilnpc 150 0 evilnpc 200 0 e
